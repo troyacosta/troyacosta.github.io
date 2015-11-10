@@ -34,7 +34,8 @@ module.exports = React.createClass({
 			<form className="loginForm" onSubmit={this.addEvent}>
 				<div className="form-group">
 					<label>Select Your Car</label>
-					<select className="form-control" onChange={this.getTires} ref="carPick">
+					<select defaultValue="Cars" className="form-control" onChange={this.getTires} ref="carPick">
+						<option>Cars</option>
 						{carOptions}
 					</select>
 				</div>
@@ -70,7 +71,9 @@ module.exports = React.createClass({
 					<label>Upload Tire Photo</label>
 					<input type="file" className="form-control" ref="tirePic"/>
 				</div>
+				<div className="formButton">
 					<button type="submit" className="btn btn-default">Add Event!</button>
+				</div>
 			</form>			
 		)
 	},
@@ -91,14 +94,11 @@ module.exports = React.createClass({
 		e.preventDefault();
 		var NumberOfRuns = parseInt(this.refs.numberOfRuns.value);
 		var CourseLength = parseInt(this.refs.courseLength.value);
+		var picture = this.refs.tirePic.value;
 		var tires = this.state.tires;
 		var car = tires[0].get('car');
 		var image = this.refs.tirePic.files[0];
 		var file = new Parse.File('photo.jpg', image);
-		var imageModel = new ImageModel({
-			image: file,
-			tires: tires[0]
-		})
 		var Event = new EventModel({
 			location: this.refs.location.value,
 			weather: this.refs.weather.value,
@@ -108,10 +108,21 @@ module.exports = React.createClass({
 			numberOfRuns: NumberOfRuns,
 			videoLink: this.refs.videoLink.value,
 			car: car,
-			tires: tires[0]
+			tires: tires[0],
+			user: Parse.User.current()
 		})
-		imageModel.save();
-		Event.save();
+		var imageModel = new ImageModel({
+			image: file,
+			tires: tires[0],
+			event: Event
+		})
+		Event.save(null, {
+			success: function() {
+				if(picture !== '') {
+					imageModel.save();
+				}
+			}
+		});
 		tires[0].increment('runs', NumberOfRuns);
 		tires[0].save().then( () => this.props.dispatcher.trigger('eventAdded'));
 	}

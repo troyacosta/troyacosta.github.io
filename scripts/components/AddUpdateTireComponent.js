@@ -33,8 +33,17 @@ module.exports = React.createClass({
 			<form className="addTireForm" onSubmit={this.saveTireInfo}>
 				<div className="form-group">
 					<label>Select Your Car</label>
-					<select className="form-control" onChange={this.getCarTireInfo} ref="carPick">
+					<select defaultValue="cars" className="form-control" onChange={this.getCarTireInfo} ref="carPick">
+						<option>Cars</option>
 						{carOptions}
+					</select>
+				</div>
+				<div className="form-group">
+					<label>Tire Type</label>
+					<select className="form-control" ref="tireType">
+						<option>Choose Tire Type</option>
+						<option value="streetTire">Street Tires</option>
+						<option value="raceTire">Race Tires</option>
 					</select>
 				</div>
 				<div className="form-group">					
@@ -54,14 +63,12 @@ module.exports = React.createClass({
 					<input type="text" className="form-control" ref="rearTireSize" placeholder="Required" />
 				</div>
 				<div className="form-group">					
-					<label>Tire Set Condition</label>
-					<input type="text" className="form-control" ref="startingCondition" placeholder="Optional" />
+					<label>Current Runs On Tires</label>
+					<input type="number" className="form-control" ref="runs" placeholder="Optional" />
 				</div>
-				<div className="form-group">					
-					<label>Tread Depth</label>
-					<input type="text" className="form-control" ref="treadDepth" placeholder="Optional" />
+				<div className="formButton">
+					<button type="submit" className="btn btn-default">Add Tire Info!</button>
 				</div>
-				<button type="submit" className="btn btn-default">Add Tire Info!</button>
 			</form>
 		)
 	},
@@ -82,14 +89,15 @@ module.exports = React.createClass({
 			this.refs.model.value = (tires !== null) ? tires.get('model'): '';
 			this.refs.frontTireSize.value = (tires !== null) ? tires.get('frontTireSize'): '';
 			this.refs.rearTireSize.value = (tires !== null) ? tires.get('rearTireSize'): '';
-			this.refs.startingCondition.value = (tires !== null) ? tires.get('startingCondition'): '';
-			this.refs.treadDepth.value = (tires !== null) ? tires.get('treadDepth'): '';
+			this.refs.runs.value = (tires !== null) ? tires.get('runs'): '';
 		})		
 	},
 	//function that saves the tire information that was entered. This function will also set the "retired" property 
 	//to true on the old set of tires if the car is not new.
 	saveTireInfo: function(e) {
 		e.preventDefault();
+		var tireType = (this.refs.tireType.value === 'raceTire') ? true: false;
+		var runs = parseInt(this.refs.runs.value);
 		var oldTires = (this.state.tires[0]) ? this.state.tires[0] : null;
 		var carId = this.refs.carPick.value;
 		var car = null;
@@ -103,10 +111,11 @@ module.exports = React.createClass({
 			model: this.refs.model.value,
 			frontTireSize: this.refs.frontTireSize.value,
 			rearTireSize: this.refs.rearTireSize.value,
-			startingCondition: this.refs.startingCondition.value,
-			treadDepth: this.refs.treadDepth.value,
+			runs: runs,
 			retired: false,
-			car: car
+			car: car,
+			raceTires: tireType,
+			user: Parse.User.current()
 		})
 		Tires.save(null, {
 			success: function() {

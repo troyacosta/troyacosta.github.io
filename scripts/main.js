@@ -6,24 +6,24 @@ var Backbone = require('backbone');
 var App = document.getElementById('app');
 var NavigationComponent = require('./components/NavigationComponent');
 var HomePageComponent = require('./components/HomePageComponent');
-var RegisterLoginComponent = require('./components/RegisterLoginComponent');
 var UserPageComponent = require('./components/UserPageComponent');
 var LandingPageComponent = require('./components/LandingPageComponent');
+var TireInfoComponent = require('./components/TireInfoComponent');
 window.$ = require('jquery');
 window.jQuery = $;
+require('bootstrap');
 
 var Router = Backbone.Router.extend({
 	routes: {
 		'': 'landing',
 		'home': 'home',
-		'register': 'registerLogin',
-		'login': 'registerLogin',
+		'tireInfo/:id': 'tireInfo',
 		'user/:id': 'userPage',
 		'logOut': 'logOut'
 	},
 	landing: function() {
 		ReactDOM.render(
-			<LandingPageComponent router={r}/>,
+			<LandingPageComponent />,
 			App
 		)
 	},
@@ -33,15 +33,15 @@ var Router = Backbone.Router.extend({
 			App
 		)
 	},
-	registerLogin: function() {
+	tireInfo: function(id) {
 		ReactDOM.render(
-			<RegisterLoginComponent router={r}/>,
+			<TireInfoComponent tiresId={id}/>,
 			App
 		)
 	},
 	userPage: function(id) {
 		ReactDOM.render(
-			<UserPageComponent userId={id}/>,
+			<UserPageComponent userId={id} router={r}/>,
 			App
 		)
 	},

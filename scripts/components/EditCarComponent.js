@@ -21,7 +21,7 @@ module.exports = React.createClass({
 		})
 	},
 	render: function() {
-			var carOptions = this.state.cars.map(function(car) {
+		var carOptions = this.state.cars.map(function(car) {
 			return(
 				<option value={car.id} key={car.id}>{car.get('make')+ ' - '+car.get('model')}</option>
 			)
@@ -31,6 +31,7 @@ module.exports = React.createClass({
 					<div className="form-group">
 						<label>Select Your Car</label>
 						<select className="form-control" onChange={this.getCarInfo} ref="carPick">
+							<option>Cars</option>
 							{carOptions}
 						</select>
 					</div>
@@ -43,10 +44,6 @@ module.exports = React.createClass({
 						<input type="number" className="form-control" ref="weight" placeholder="Optional" />
 					</div>
 					<div className="form-group">					
-						<label>Color</label>
-						<input type="text" className="form-control" ref="color" placeholder="Optional" />
-					</div>
-					<div className="form-group">					
 						<label>Front Wheel Size</label>
 						<input type="text" className="form-control" ref="frontWheelSize" placeholder="Required" />
 					</div>
@@ -54,7 +51,9 @@ module.exports = React.createClass({
 						<label>Rear Wheel Size</label>
 						<input type="text" className="form-control" ref="rearWheelSize" placeholder="Required" />
 					</div>
-					<button type="submit" className="btn btn-default">Save Car Info!</button>
+					<div className="formButton">
+						<button type="submit" className="btn btn-default">Save Car Info!</button>
+					</div>
 				</form>
 			)
 	},
@@ -69,7 +68,6 @@ module.exports = React.createClass({
 		})	
 		this.refs.carClass.value = car.get('carClass');
 		this.refs.weight.value = car.get('weight');
-		this.refs.color.value = car.get('color');
 		this.refs.frontWheelSize.value = car.get('frontWheelSize');
 		this.refs.rearWheelSize.value = car.get('rearWheelSize');
 	},
@@ -84,10 +82,9 @@ module.exports = React.createClass({
 			}
 		})
 		car.set('carClass', this.refs.carClass.value);
-		car.set('weight', carWeight);
-		car.set('color', this.refs.color.value);	
+		car.set('weight', carWeight);	
 		car.set('frontWheelSize', this.refs.frontWheelSize.value);	
 		car.set('rearWheelSize', this.refs.rearWheelSize.value);
-		car.save().then(() => this.props.dispatcher.trigger('carEdited'));		
+		car.save().then(() => this.props.dispatcher.trigger('carEdited'));	
 	}
 })
