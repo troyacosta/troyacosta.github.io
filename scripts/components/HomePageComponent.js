@@ -62,8 +62,8 @@ module.exports = React.createClass({
 			//adds an embedded video and a link if a video was saved with the event, otherwise it displays nothing
 			var video = Event.get('videoLink') !== '' ? <a href={Event.get('videoLink')}>Video Link</a>: <br />;
 			var videoCode = Event.get('videoLink').split('=');
-			var embeddedVideo = Event.get('videoLink') !== '' ? <iframe src={"http://www.youtube.com/embed/"+videoCode[1]} frameBorder="0" 
-				width="640" height="360" allowFullScreen></iframe>: <br />;
+			var embeddedVideo = Event.get('videoLink') !== '' ? <iframe src={'https://www.youtube.com/embed/'+videoCode[1]} frameBorder='0' 
+				width='640' height='360' allowFullScreen></iframe>: <br />;
 			var date = Event.get('createdAt').toString().slice(0, 15);
 			return(
 						<div key={Event.id} className="eventBox">
