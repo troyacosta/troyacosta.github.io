@@ -19,7 +19,6 @@ module.exports = React.createClass({
 		eventQuery.include('car');
 		eventQuery.include('tires');
 		eventQuery.include('user');
-		eventQuery.limit(10);
 		eventQuery.find().then((events) => {
 			this.setState({events: events});
 		})
