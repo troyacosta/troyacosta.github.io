@@ -59,8 +59,11 @@ module.exports = React.createClass({
 			var car = Event.get('car');
 			var tires = Event.get('tires');
 			var poster = Event.get('user');
-			//adds a video link if one has been stored in the model, otherwise it displays nothing
+			//adds an embedded video and a link if a video was saved with the event, otherwise it displays nothing
 			var video = Event.get('videoLink') !== '' ? <a href={Event.get('videoLink')}>Video Link</a>: <br />;
+			var videoCode = Event.get('videoLink').split('=');
+			var embeddedVideo = Event.get('videoLink') !== '' ? <iframe src={"http://www.youtube.com/embed/"+videoCode[1]} frameBorder="0" 
+				width="640" height="360" allowFullScreen></iframe>: <br />;
 			var date = Event.get('createdAt').toString().slice(0, 15);
 			return(
 						<div key={Event.id} className="eventBox">
@@ -69,7 +72,8 @@ module.exports = React.createClass({
 							<h5>Car - {car.get('carClass')+' - '+car.get('make')+' '+car.get('model')}</h5>
 							<a href={'#tireInfo/'+tires.id}>Tires:  {tires.get('brand')+' '+tires.get('model')}</a>
 							<p>{Event.get('eventComments')}</p>
-							{video}						
+							{video}
+							{embeddedVideo}					
 						</div>
 			)
 		}).reverse();

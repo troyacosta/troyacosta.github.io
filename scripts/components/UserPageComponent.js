@@ -16,6 +16,7 @@ module.exports = React.createClass({
 	        tires: []
 	    });
 	},
+	//query event information. Also add the dispatcher calls that will launch the modals.
 	componentWillMount: function() {
 		var eventQuery = new Parse.Query(EventModel);
 		var tireSetQuery = new Parse.Query(TireSetModel);
@@ -46,6 +47,7 @@ module.exports = React.createClass({
 		})
 	},
 	render: function() {
+		//function to display each retired tire set
 		var retiredTires = this.state.tires.map((tireSet) => {
 			if(tireSet.get('retired') === true) {
 				return(
@@ -58,6 +60,7 @@ module.exports = React.createClass({
 				)
 			}
 		}).reverse();
+		//function to display each active tire set
 		var activeTires = this.state.tires.map((tireSet) => {
 			if(tireSet.get('retired') === false) {
 				return(
@@ -73,8 +76,11 @@ module.exports = React.createClass({
 		var events = this.state.events.map((Event) => {
 			var car = Event.get('car');
 			var tires = Event.get('tires');
-			//adds a video link if one has been stored in the model, otherwise it displays nothing
+			//adds an embedded video and a link if a video was saved with the event, otherwise it displays nothing
 			var video = Event.get('videoLink') !== '' ? <a href={Event.get('videoLink')}>Video Link</a>: <br />;
+			var videoCode = Event.get('videoLink').split('=');
+			var embeddedVideo = Event.get('videoLink') !== '' ? <iframe src={"http://www.youtube.com/embed/"+videoCode[1]} frameBorder="0" 
+				width="640" height="360" allowFullScreen></iframe>: <br />;
 			var date = Event.get('createdAt').toString().slice(0, 15);
 			return(
 				<div key={Event.id} className="eventBox">
@@ -84,6 +90,7 @@ module.exports = React.createClass({
 					<a href={'#tireInfo/'+tires.id}>Tires:  {tires.get('brand')+' '+tires.get('model')}</a>
 					<p>{Event.get('eventComments')}</p>
 					{video}
+					{embeddedVideo}
 				</div>
 			)
 		}).reverse();
